@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ghub · 3D gaming hub</title>
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      transition: all 0.2s ease;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #0b0e14;
+      color: #f0f3fa;
+      transition: background-image 1s ease, background-color 1s ease;
+      background-size: cover;
+      background-blend-mode: overlay;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+    }
+
+    /* ----- 3D IMAGE WALLPAPERS (complex 3D SVG scenes) ----- */
+    body.wall-codm {
+      background-image: 
+        linear-gradient(135deg, rgba(10, 5, 20, 0.6), rgba(30, 10, 40, 0.7)),
+        url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cGF0aCBkPSJNMjAgM2wxMCAxMC02IDYtMTAtMTAgNi02eiIgZmlsbD0iI2ZmNmI2YiIgb3BhY2l0eT0iMC4yIi8+PHJlY3QgeD0iMTUiIHk9IjE1IiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9IiNmZjZiNmIiIG9wYWNpdHk9IjAuMTUiIHRyYW5zZm9ybT0icm90YXRlKDQ1LDIwLDIwKSIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMjAiIHI9IjUiIGZpbGw9IiNmZjZiNmIiIG9wYWNpdHk9IjAuMDYiLz48cGF0aCBkPSJNMTAgMTBoMjB2MjBIMTB6IiBmaWxsPSIjZmY2YjZiIiBvcGFjaXR5PSIwLjA0IiB0cmFuc2Zvcm09InJvdGF0ZSgzMCwyMCwyMCkiLz48L3N2Zz4=');
+      background-color: #0d0418;
+      background-blend-mode: overlay, normal;
+    }
+    body.wall-pubg {
+      background-image: 
+        linear-gradient(145deg, rgba(10, 15, 20, 0.6), rgba(20, 30, 10, 0.7)),
+        url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgdmlld0JveD0iMCAwIDQwIDQwIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSI4IiBmaWxsPSIjZmZkOTNkIiBvcGFjaXR5PSIwLjE1Ii8+PHBvbHlnb24gcG9pbnRzPSIxMCwxMCAzMCwxMCAyMCwzMCIgZmlsbD0iI2ZmZDkzZCIgb3BhY2l0eT0iMC4xIi8+PHJlY3QgeD0iMTQiIHk9IjE0IiB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIGZpbGw9IiNmZmQ5M2QiIG9wYWNpdHk9IjAuMDgiIHRyYW5zZm9ybT0icm90YXRlKDYwLDIwLDIwKSIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iMTAgcj0iMyIgZmlsbD0iI2ZmZDkzZCIgb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==');
+      background-color: #141a0a;
+      background-blend-mode: overlay, normal;
+    }
+    body.wall-efootball {
+      background-image: 
+        linear-gradient(145deg, rgba(5, 25, 20, 0.6), rgba(10, 35, 30, 0.7)),
+        url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cmVjdCB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9IiM2YmNiZmYiIG9wYWNpdHk9IjAuMTUiIHRyYW5zZm9ybT0icm90YXRlKDQ1LDIwLDIwKSIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMTAiIHI9IjMiIGZpbGw9IiM2YmNiZmYiIG9wYWNpdHk9IjAuMTIiLz48cG9seWdvbiBwb2ludHM9IjEwLDIwIDMwLDIwIDIwLDMwIiBmaWxsPSIjNmJjYmZmIiBvcGFjaXR5PSIwLjA4Ii8+PHJlY3QgeD0iMTUiIHk9IjE1IiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9IiM2YmNiZmYiIG9wYWNpdHk9IjAuMDYiIHRyYW5zZm9ybT0icm90YXRlKDYwLDIwLDIwKSIvPjwvc3ZnPg==');
+      background-color: #061a14;
+      background-blend-mode: overlay, normal;
+    }
+    body.wall-deltaforce {
+      background-image: 
+        linear-gradient(145deg, rgba(15, 10, 30, 0.6), rgba(25, 15, 40, 0.7)),
+        url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cG9seWdvbiBwb2ludHM9IjEwLDIwIDIwLDEwIDMwLDIwIDIwLDMwIiBmaWxsPSIjYTI5YmZlIiBvcGFjaXR5PSIwLjE1Ii8+PHJlY3QgeD0iMTUiIHk9IjE1IiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9IiNhMjliZmUiIG9wYWNpdHk9IjAuMTIiIHRyYW5zZm9ybT0icm90YXRlKDQ1LDIwLDIwKSIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMjAiIHI9IjQiIGZpbGw9IiNhMjliZmUiIG9wYWNpdHk9IjAuMDYiLz48cGF0aCBkPSJNMTAgMTBoMjB2MjBIMTB6IiBmaWxsPSIjYTI5YmZlIiBvcGFjaXR5PSIwLjA0IiB0cmFuc2Zvcm09InJvdGF0ZSg2MCwyMCwyMCkiLz48L3N2Zz4=');
+      background-color: #0f0820;
+      background-blend-mode: overlay, normal;
+    }
+    body.wall-dream {
+      background-image: 
+        linear-gradient(145deg, rgba(25, 10, 30, 0.6), rgba(35, 15, 40, 0.7)),
+        url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgdmlld0JveD0iMCAwIDQwIDQwIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjEwIiByPSI0IiBmaWxsPSIjZmQ3OWE4IiBvcGFjaXR5PSIwLjE1Ii8+PHJlY3QgeD0iMTIiIHk9IjEyIiB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIGZpbGw9IiNmZDc5YTgiIG9wYWNpdHk9IjAuMTIiIHRyYW5zZm9ybT0icm90YXRlKDYwLDIwLDIwKSIvPjxwb2x5Z29uIHBvaW50cz0iMTAsMjAgMzAsMjAgMjAsMzAiIGZpbGw9IiNmZDc5YTgiIG9wYWNpdHk9IjAuMDgiLz48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIzIiBmaWxsPSIjZmQ3OWE4IiBvcGFjaXR5PSIwLjA2Ii8+PC9zdmc+');
+      background-color: #1a0a1a;
+      background-blend-mode: overlay, normal;
+    }
+    body.wall-payback {
+      background-image: 
+        linear-gradient(145deg, rgba(20, 25, 10, 0.6), rgba(30, 35, 10, 0.7)),
+        url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cmVjdCB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMTIiIGZpbGw9IiNmZGNiNmUiIG9wYWNpdHk9IjAuMTUiIHRyYW5zZm9ybT0icm90YXRlKDYwLDIwLDIwKSIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMjgiIHI9IjQiIGZpbGw9IiNmZGNiNmUiIG9wYWNpdHk9IjAuMTIiLz48cG9seWdvbiBwb2ludHM9IjEwLDIwIDMwLDIwIDIwLDEwIiBmaWxsPSIjZmRjYjZlIiBvcGFjaXR5PSIwLjA4Ii8+PHJlY3QgeD0iMTUiIHk9IjE1IiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9IiNmZGNiNmUiIG9wYWNpdHk9IjAuMDYiIHRyYW5zZm9ybT0icm90YXRlKDQ1LDIwLDIwKSIvPjwvc3ZnPg==');
+      background-color: #141a08;
+      background-blend-mode: overlay, normal;
+    }
+    body.wall-minimitia {
+      background-image: 
+        linear-gradient(145deg, rgba(5, 20, 20, 0.6), rgba(5, 30, 25, 0.7)),
+        url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgdmlld0JveD0iMCAwIDQwIDQwIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSI2IiBmaWxsPSIjNTVlZmM0IiBvcGFjaXR5PSIwLjE1Ii8+PHBvbHlnb24gcG9pbnRzPSIxMCwyMCAyMCwxMCAzMCwyMCAyMCwzMCIgZmlsbD0iIzU1ZWZjNCIgb3BhY2l0eT0iMC4xIi8+PHJlY3QgeD0iMTQiIHk9IjE0IiB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIGZpbGw9IiM1NWVmYzQiIG9wYWNpdHk9IjAuMDgiIHRyYW5zZm9ybT0icm90YXRlKDQ1LDIwLDIwKSIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iMzAiIHI9IjMiIGZpbGw9IiM1NWVmYzQiIG9wYWNpdHk9IjAuMDYiLz48L3N2Zz4=');
+      background-color: #051414;
+      background-blend-mode: overlay, normal;
+    }
+
+    .app {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* navbar */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem 2rem;
+      padding: 0.8rem 1.2rem;
+      background: rgba(20, 26, 36, 0.75);
+      backdrop-filter: blur(12px);
+      border-radius: 60px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+      margin-bottom: 2rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #b388ff, #7c4dff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+      cursor: default;
+    }
+    .brand i {
+      font-size: 2rem;
+      background: linear-gradient(145deg, #b388ff, #7c4dff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      color: #b0c4e8;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.4rem 0.8rem;
+      border-radius: 40px;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.95rem;
+      background: transparent;
+    }
+    .nav-links a i { font-size: 1rem; }
+    .nav-links a:hover {
+      background: rgba(75, 107, 255, 0.15);
+      color: white;
+      transform: scale(1.02);
+      box-shadow: 0 0 12px rgba(75, 107, 255, 0.3);
+    }
+    .nav-links a.active {
+      background: #4b6bff;
+      color: white;
+      box-shadow: 0 0 20px #4b6bff66;
+    }
+
+    .game-selector {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: #1a212c;
+      padding: 0.2rem 0.2rem 0.2rem 0.8rem;
+      border-radius: 40px;
+      border: 1px solid #2d3648;
+    }
+    .game-selector i { color: #9bb1e0; font-size: 0.9rem; }
+    .game-selector select {
+      background: transparent;
+      border: none;
+      color: white;
+      font-weight: 500;
+      padding: 0.4rem 0.8rem 0.4rem 0.2rem;
+      outline: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      border-radius: 30px;
+    }
+    .game-selector select option { background: #1a212c; color: white; }
+
+    /* tab bar */
+    .tab-bar {
+      display: flex;
+      gap: 0.6rem;
+      background: rgba(16, 22, 32, 0.7);
+      backdrop-filter: blur(8px);
+      padding: 0.6rem 1.2rem;
+      border-radius: 60px;
+      border: 1px solid #2b3448;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: #9eb2d6;
+      padding: 0.5rem 1.4rem;
+      border-radius: 40px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .tab-btn i { font-size: 1.1rem; }
+    .tab-btn:hover {
+      background: #2b3448;
+      color: white;
+      transform: translateY(-2px);
+    }
+    .tab-btn.active {
+      background: #4b6bff;
+      color: white;
+      box-shadow: 0 4px 20px #4b6bff66;
+    }
+
+    .panel {
+      display: none;
+      flex-direction: column;
+      gap: 2rem;
+      animation: fadeSlide 0.3s ease;
+    }
+    .panel.active { display: flex; }
+
+    @keyframes fadeSlide {
+      0% { opacity: 0.2; transform: translateY(8px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.8rem;
+    }
+    @media (max-width: 760px) { .grid-2col { grid-template-columns: 1fr; } }
+
+    .card {
+      background: rgba(22, 29, 42, 0.7);
+      backdrop-filter: blur(6px);
+      border: 1px solid #2b3448;
+      border-radius: 28px;
+      padding: 1.5rem 1.8rem;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+      transition: 0.25s ease;
+    }
+    .card:hover {
+      transform: scale(1.01) translateY(-4px);
+      border-color: #4b6bff66;
+      box-shadow: 0 20px 40px #0b0f18;
+    }
+    .card h3 {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      font-size: 1.3rem;
+      margin-bottom: 1.2rem;
+      color: #ccddff;
+    }
+    .card h3 i { color: #4b6bff; }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 1.2rem;
+    }
+    .input-group label {
+      font-weight: 500;
+      color: #b0c8f0;
+      font-size: 0.9rem;
+      letter-spacing: 0.3px;
+    }
+    .input-group input, .input-group textarea, .input-group select {
+      background: #111824;
+      border: 1px solid #2a3448;
+      border-radius: 20px;
+      padding: 0.8rem 1.2rem;
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      transition: 0.2s;
+    }
+    .input-group input:focus, .input-group textarea:focus, .input-group select:focus {
+      border-color: #4b6bff;
+      box-shadow: 0 0 0 3px #4b6bff33;
+    }
+    .input-group textarea { resize: vertical; min-height: 70px; }
+
+    .btn {
+      background: #4b6bff;
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 0.7rem 1.8rem;
+      border-radius: 60px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+      border: 1px solid transparent;
+    }
+    .btn:hover {
+      background: #5f7aff;
+      transform: scale(1.02);
+      box-shadow: 0 0 30px #4b6bff77;
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #4b6bff;
+      color: #b0c8f0;
+    }
+    .btn-outline:hover { background: #4b6bff22; }
+
+    .verify-badge {
+      background: #1e2a3a;
+      border-radius: 30px;
+      padding: 0.2rem 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      border: 1px solid #4b6bff55;
+    }
+
+    .stat-post {
+      background: #141c2a;
+      border-radius: 20px;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      border-left: 4px solid #4b6bff;
+    }
+    .stat-post .meta {
+      display: flex;
+      justify-content: space-between;
+      color: #8aa0c9;
+      font-size: 0.8rem;
+    }
+
+    .chat-box {
+      background: #0e1520;
+      border-radius: 24px;
+      padding: 1rem;
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid #273040;
+      margin-bottom: 1rem;
+    }
+    .chat-msg {
+      padding: 0.4rem 0;
+      border-bottom: 1px solid #1f283a;
+    }
+    .chat-msg strong { color: #b388ff; }
+
+    .tournament-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .tournament-item {
+      background: #111a28;
+      padding: 0.8rem 1.2rem;
+      border-radius: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #29344a;
+      transition: 0.2s;
+    }
+    .tournament-item:hover { border-color: #4b6bff; background: #1a2538; }
+
+    .footer-note {
+      margin-top: 2.5rem;
+      text-align: center;
+      color: #4c6085;
+      font-size: 0.8rem;
+      border-top: 1px solid #1e2638;
+      padding-top: 1.5rem;
+    }
+    .chat-msg .del-msg {
+      float: right;
+      background: transparent;
+      border: none;
+      color: #6f8ab0;
+      cursor: pointer;
+      font-size: 0.7rem;
+      opacity: 0.5;
+      transition: 0.2s;
+    }
+    .chat-msg .del-msg:hover { opacity: 1; color: #ff6b6b; }
+
+    .wallpaper-badge {
+      background: rgba(75, 107, 255, 0.2);
+      border: 1px solid rgba(75, 107, 255, 0.3);
+      border-radius: 40px;
+      padding: 0.2rem 1rem;
+      font-size: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="brand">
+      <i class="fas fa-gamepad"></i> Ghub
+    </div>
+    <div class="nav-links">
+      <a href="#" class="active"><i class="fas fa-compass"></i> Games</a>
+      <a href="#" id="settingsLink"><i class="fas fa-user-cog"></i> Settings</a>
+      <a href="#" id="profileLink"><i class="fas fa-id-badge"></i> Profile</a>
+      <div class="game-selector">
+        <i class="fas fa-joystick"></i>
+        <select id="gameSelect">
+          <option value="CODM">CODM</option>
+          <option value="PUBG">PUBG</option>
+          <option value="Efootball">Efootball</option>
+          <option value="Deltaforce">Deltaforce</option>
+          <option value="Dream league">Dream league</option>
+          <option value="Payback">Payback</option>
+          <option value="minimitia">minimitia</option>
+        </select>
+      </div>
+    </div>
+  </nav>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="home"><i class="fas fa-home"></i> Home</button>
+    <button class="tab-btn" data-tab="chats"><i class="fas fa-comment-dots"></i> Chats</button>
+    <button class="tab-btn" data-tab="tournaments"><i class="fas fa-trophy"></i> Tournaments</button>
+    <button class="tab-btn" data-tab="stats"><i class="fas fa-chart-line"></i> Stats</button>
+  </div>
+
+  <!-- PANELS -->
+  <!-- HOME -->
+  <div id="home" class="panel active">
+    <div class="grid-2col">
+      <div class="card">
+        <h3><i class="fas fa-user-check"></i> Account verification</h3>
+        <div class="input-group">
+          <label>Gaming ID / username</label>
+          <input type="text" id="gamerTag" placeholder="e.g. Ghost#1234" value="Fury_47">
+        </div>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+          <button class="btn" id="verifyBtn"><i class="fas fa-shield-alt"></i> Verify account</button>
+          <span class="verify-badge" id="verifyBadge"><i class="fas fa-circle" style="color: #4b6bff;"></i> pending</span>
+        </div>
+        <p style="margin-top: 1rem; color: #9ab0dd; font-size: 0.9rem;"><i class="fas fa-info-circle"></i> We check your gaming profile across platforms.</p>
+        <div id="verificationHistory" style="margin-top: 0.8rem; font-size: 0.85rem; color: #8aa0c9;"></div>
+      </div>
+      <div class="card">
+        <h3><i class="fas fa-bolt"></i> Quick post stats</h3>
+        <div class="input-group">
+          <label>Match result</label>
+          <input type="text" id="statInput" placeholder="e.g. 18 kills, MVP" value="24 kills · 2nd place">
+        </div>
+        <button class="btn" id="postStatBtn"><i class="fas fa-upload"></i> Post stat</button>
+        <div style="margin-top: 1.2rem;" id="homeStatsFeed">
+          <div class="stat-post"><strong>Fury_47</strong> <span>24 kills · 2nd place</span> <span class="meta"><i class="far fa-clock"></i> 2min ago</span></div>
+          <div class="stat-post"><strong>VexX</strong> <span>MVP · 32 eliminations</span> <span class="meta"><i class="far fa-clock"></i> 15min ago</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top: 0.5rem;">
+      <h3><i class="fas fa-cube"></i> 3D Background Image</h3>
+      <p style="color: #b0c8f0;">Current: <strong id="currentGameDisplay">CODM</strong>  <span class="wallpaper-badge"><i class="fas fa-cube"></i> 3D scene</span></p>
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.6rem;">
+        <span class="verify-badge" style="background:#1f2b40;"><i class="fas fa-circle" style="color: #ff6b6b;"></i> neon</span>
+        <span class="verify-badge" style="background:#1f2b40;"><i class="fas fa-circle" style="color: #ffd93d;"></i> vivid</span>
+        <span class="verify-badge" style="background:#1f2b40;"><i class="fas fa-circle" style="color: #6bcbff;"></i> cyber</span>
+        <span class="verify-badge" style="background:#1f2b40;"><i class="fas fa-cube"></i> 3D shapes</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHATS -->
+  <div id="chats" class="panel">
+    <div class="card">
+      <h3><i class="fas fa-comments"></i> Community chat <span style="font-size:0.8rem; font-weight:400; margin-left:1rem; color:#8aa0c9;"><i class="fas fa-trash-alt" id="clearChatBtn" style="cursor:pointer;"></i> clear</span></h3>
+      <div class="chat-box" id="chatMessages">
+        <div class="chat-msg"><strong>Raven:</strong> anyone up for ranked? <button class="del-msg"><i class="fas fa-times"></i></button></div>
+        <div class="chat-msg"><strong>Ghost:</strong> yeah, CODM lobby <button class="del-msg"><i class="fas fa-times"></i></button></div>
+        <div class="chat-msg"><strong>Nova:</strong> GGs last match <button class="del-msg"><i class="fas fa-times"></i></button></div>
+      </div>
+      <div class="input-group" style="flex-direction: row; gap: 0.6rem;">
+        <input type="text" id="chatInput" placeholder="Type a message..." style="flex:1;">
+        <button class="btn" id="sendChatBtn"><i class="fas fa-paper-plane"></i> Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOURNAMENTS -->
+  <div id="tournaments" class="panel">
+    <div class="card">
+      <h3><i class="fas fa-trophy"></i> Create tournament</h3>
+      <div class="input-group">
+        <label>Tournament name</label>
+        <input type="text" id="tournamentName" placeholder="e.g. Ghub Clash #1" value="Weekend Showdown">
+      </div>
+      <div class="input-group">
+        <label>Game</label>
+        <select id="tournamentGame" style="background:#111824; color:white; border:1px solid #2a3448; border-radius:20px; padding:0.8rem;">
+          <option>CODM</option><option>PUBG</option><option>Efootball</option><option>Deltaforce</option>
+          <option>Dream league</option><option>Payback</option><option>minimitia</option>
+        </select>
+      </div>
+      <button class="btn" id="createTournamentBtn"><i class="fas fa-plus-circle"></i> Create tournament</button>
+      <div style="margin-top: 1.5rem;">
+        <h4>Active tournaments <span style="font-size:0.8rem; font-weight:400; margin-left:1rem; color:#8aa0c9;"><i class="fas fa-trash-alt" id="clearTournamentsBtn" style="cursor:pointer;"></i> clear all</span></h4>
+        <div class="tournament-list" id="tournamentList">
+          <div class="tournament-item"><span><i class="fas fa-gamepad"></i> CODM · Ghub Clash</span> <span class="verify-badge">8 players</span></div>
+          <div class="tournament-item"><span><i class="fas fa-gamepad"></i> PUBG · Squad Royale</span> <span class="verify-badge">12 players</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div id="stats" class="panel">
+    <div class="card">
+      <h3><i class="fas fa-chart-simple"></i> Latest stats <span style="font-size:0.8rem; font-weight:400; margin-left:1rem; color:#8aa0c9;"><i class="fas fa-trash-alt" id="clearStatsBtn" style="cursor:pointer;"></i> clear</span></h3>
+      <div id="statsFeed">
+        <div class="stat-post"><strong>Fury_47</strong> <span>24 kills · 2nd place</span> <span class="meta">CODM</span></div>
+        <div class="stat-post"><strong>VexX</strong> <span>MVP · 32 eliminations</span> <span class="meta">PUBG</span></div>
+        <div class="stat-post"><strong>Knight</strong> <span>7 goals · hat-trick</span> <span class="meta">Efootball</span></div>
+      </div>
+      <p style="color:#6f8ab0;"><i class="fas fa-database"></i> all stats are shared across Ghub</p>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <i class="fas fa-cube"></i> Ghub · 3D game background images
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ----- ELEMENTS -----
+    const gameSelect = document.getElementById('gameSelect');
+    const currentGameDisplay = document.getElementById('currentGameDisplay');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const verifyBadge = document.getElementById('verifyBadge');
+    const gamerTag = document.getElementById('gamerTag');
+    const postStatBtn = document.getElementById('postStatBtn');
+    const statInput = document.getElementById('statInput');
+    const statsFeed = document.getElementById('statsFeed');
+    const homeStatsFeed = document.getElementById('homeStatsFeed');
+    const chatInput = document.getElementById('chatInput');
+    const sendChatBtn = document.getElementById('sendChatBtn');
+    const chatMessages = document.getElementById('chatMessages');
+    const tournamentName = document.getElementById('tournamentName');
+    const tournamentGame = document.getElementById('tournamentGame');
+    const createTournamentBtn = document.getElementById('createTournamentBtn');
+    const tournamentList = document.getElementById('tournamentList');
+    const clearChatBtn = document.getElementById('clearChatBtn');
+    const clearTournamentsBtn = document.getElementById('clearTournamentsBtn');
+    const clearStatsBtn = document.getElementById('clearStatsBtn');
+    const verificationHistory = document.getElementById('verificationHistory');
+
+    // ----- 3D IMAGE WALLPAPER ENGINE (complex SVG with 3D effects) -----
+    function setWallpaper(game) {
+      const body = document.body;
+      // remove all wallpaper classes
+      body.className = body.className.split(' ').filter(c => !c.startsWith('wall-')).join(' ');
+      const map = {
+        'CODM': 'wall-codm',
+        'PUBG': 'wall-pubg',
+        'Efootball': 'wall-efootball',
+        'Deltaforce': 'wall-deltaforce',
+        'Dream league': 'wall-dream',
+        'Payback': 'wall-payback',
+        'minimitia': 'wall-minimitia'
+      };
+      if (map[game]) body.classList.add(map[game]);
+    }
+
+    // apply initial
+    setWallpaper(gameSelect.value);
+    currentGameDisplay.textContent = gameSelect.value;
+
+    gameSelect.addEventListener('change', function() {
+      const val = this.value;
+      currentGameDisplay.textContent = val;
+      setWallpaper(val);
+    });
+
+    // ----- TAB SWITCH -----
+    const tabs = document.querySelectorAll('.tab-btn');
+    const panels = {
+      home: document.getElementById('home'),
+      chats: document.getElementById('chats'),
+      tournaments: document.getElementById('tournaments'),
+      stats: document.getElementById('stats')
+    };
+
+    tabs.forEach(btn => {
+      btn.addEventListener('click', function() {
+        tabs.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const tabName = this.dataset.tab;
+        Object.keys(panels).forEach(key => {
+          panels[key].classList.toggle('active', key === tabName);
+        });
+      });
+    });
+
+    // ----- SETTINGS / PROFILE (demo) -----
+    document.getElementById('settingsLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      alert('⚙️ Settings: change your gaming ID, privacy, and notifications.');
+    });
+    document.getElementById('profileLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      alert(`👤 Profile: ${gamerTag.value || 'Guest'} · level 42 · 230 wins`);
+    });
+
+    // ----- VERIFY ACCOUNT (with history) -----
+    verifyBtn.addEventListener('click', function() {
+      const tag = gamerTag.value.trim() || 'unknown';
+      verifyBadge.innerHTML = `<i class="fas fa-circle" style="color: #6fcf97;"></i> verified (${tag})`;
+      verifyBadge.style.borderColor = '#6fcf97';
+      verifyBadge.style.transform = 'scale(1.1)';
+      setTimeout(() => verifyBadge.style.transform = 'scale(1)', 200);
+      const entry = document.createElement('div');
+      entry.style.padding = '2px 0';
+      entry.innerHTML = `<i class="fas fa-check-circle" style="color:#6fcf97;"></i> ${tag} verified at ${new Date().toLocaleTimeString()}`;
+      verificationHistory.prepend(entry);
+    });
+
+    // ----- POST STAT (adds to home & stats) -----
+    function addStatPost(text, game = null) {
+      if (!text.trim()) return;
+      const gameLabel = game || gameSelect.value || 'CODM';
+      const now = new Date().toLocaleTimeString();
+      const statDiv = document.createElement('div');
+      statDiv.className = 'stat-post';
+      statDiv.innerHTML = `<strong>${gamerTag.value || 'Player'}</strong> <span>${text}</span> <span class="meta">${gameLabel} · ${now}</span>`;
+      statsFeed.prepend(statDiv);
+      const clone = statDiv.cloneNode(true);
+      homeStatsFeed.prepend(clone);
+      ['#statsFeed', '#homeStatsFeed'].forEach(sel => {
+        const container = document.querySelector(sel);
+        while (container.children.length > 6) container.lastChild.remove();
+      });
+    }
+
+    postStatBtn.addEventListener('click', function() {
+      const statText = statInput.value.trim();
+      if (!statText) { alert('Please enter a stat!'); return; }
+      addStatPost(statText);
+      statInput.value = '';
+    });
+
+    // ----- CHAT (with delete) -----
+    function addChatMessage(sender, msg) {
+      if (!msg.trim()) return;
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'chat-msg';
+      msgDiv.innerHTML = `<strong>${sender}:</strong> ${msg} <button class="del-msg"><i class="fas fa-times"></i></button>`;
+      chatMessages.appendChild(msgDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      msgDiv.querySelector('.del-msg').addEventListener('click', function() {
+        msgDiv.remove();
+      });
+    }
+
+    sendChatBtn.addEventListener('click', function() {
+      const msg = chatInput.value.trim();
+      if (!msg) return;
+      addChatMessage(gamerTag.value || 'You', msg);
+      chatInput.value = '';
+    });
+
+    chatInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') sendChatBtn.click();
+    });
+
+    document.querySelectorAll('.chat-msg .del-msg').forEach(btn => {
+      btn.addEventListener('click', function() {
+        this.closest('.chat-msg').remove();
+      });
+    });
+
+    clearChatBtn.addEventListener('click', function() {
+      chatMessages.innerHTML = '';
+    });
+
+    // ----- TOURNAMENTS (with delete & clear) -----
+    function addTournament(name, game) {
+      if (!name.trim()) return;
+      const item = document.createElement('div');
+      item.className = 'tournament-item';
+      item.innerHTML = `<span><i class="fas fa-gamepad"></i> ${game} · ${name}</span> <span class="verify-badge">0 players <i class="fas fa-trash-alt" style="margin-left:8px; cursor:pointer; color:#6f8ab0;" onclick="this.closest('.tournament-item').remove()"></i></span>`;
+      tournamentList.prepend(item);
+      item.style.background = '#2a3750';
+      setTimeout(() => item.style.background = '', 400);
+    }
+
+    createTournamentBtn.addEventListener('click', function() {
+      const name = tournamentName.value.trim() || 'Unnamed cup';
+      const game = tournamentGame.value;
+      addTournament(name, game);
+      tournamentName.value = '';
+    });
+
+    clearTournamentsBtn.addEventListener('click', function() {
+      tournamentList.innerHTML = '';
+    });
+
+    // ----- CLEAR STATS -----
+    clearStatsBtn.addEventListener('click', function() {
+      statsFeed.innerHTML = '';
+      homeStatsFeed.innerHTML = '';
+    });
+
+    // delete individual stat posts via double-click
+    document.addEventListener('dblclick', function(e) {
+      const stat = e.target.closest('.stat-post');
+      if (stat) stat.remove();
+    });
+
+    // sync game change to tournament default
+    gameSelect.addEventListener('change', function() {
+      const val = this.value;
+      if (!document.activeElement || document.activeElement !== tournamentGame) {
+        tournamentGame.value = val;
+      }
+    });
+
+    // set initial wallpaper
+    setWallpaper(gameSelect.value);
+  })();
+</script>
+</body>
+</html>
