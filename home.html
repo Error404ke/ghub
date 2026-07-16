@@ -574,7 +574,7 @@
   
     function setWallpaper(game) {
       const body = document.body;
-      // remove all wallpaper classes
+      
       body.className = body.className.split(' ').filter(c => !c.startsWith('wall-')).join(' ');
       const map = {
         'CODM': 'wall-codm',
